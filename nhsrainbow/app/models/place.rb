@@ -7,6 +7,18 @@ class Place < ActiveRecord::Base
   def self.find_from_foursquare(lat = nil, long = nil)
     client = Foursquare2::Client.new(:client_id => @client_id, :client_secret => @client_secret)
 
-    client.search_venues(ll: "#{lat}, #{long}")
+    locations = []
+
+    @venues = client.search_venues(ll: "#{lat}, #{long}")
+    @venues.groups[0].items.each do |venue|
+
+      geo = "#{venue.location.lat},#{venue.location.lng}"
+
+      location = { name: venue.name, geo: geo }
+      locations << location
+    end
+
+    locations
   end
+
 end
