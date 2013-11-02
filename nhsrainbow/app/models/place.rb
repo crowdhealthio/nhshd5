@@ -1,3 +1,4 @@
+require 'open-uri'
 class Place < ActiveRecord::Base
   attr_accessible :description, :latitude, :longitude, :name, :place_type
 
@@ -8,5 +9,10 @@ class Place < ActiveRecord::Base
     client = Foursquare2::Client.new(:client_id => @client_id, :client_secret => @client_secret)
 
     client.search_venues(ll: "#{lat}, #{long}")
+  end
+
+  def self.find_postcode(lat=nil, long=nil)
+  	postcode_json = open("http://uk-postcodes.com/latlng/{lat},{long}.json")
+  	postcode_json["postcode"]
   end
 end
