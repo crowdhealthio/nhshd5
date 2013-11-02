@@ -8,9 +8,34 @@ class Place < ActiveRecord::Base
   def self.find_from_foursquare(lat = nil, long = nil)
     client = Foursquare2::Client.new(:client_id => @client_id, :client_secret => @client_secret)
 
-    client.search_venues(ll: "#{lat}, #{long}")
+    locations = []
+
+    @venues = client.search_venues(ll: "#{lat}, #{long}")
+    @venues.groups[0].items.each do |venue|
+
+      geo = "#{venue.location.lat},#{venue.location.lng}"
+
+      locations << { name: venue.name, geo: geo } if valid_category?(venue.categories.first)
+    end
+
+    locations
   end
 
+  def self.valid_category?(category)
+    return false if category.nil?
+    @valid_categories.include?(category.name)
+  end
+
+  @valid_categories = [
+    "Medical Center",
+    "Dentist's Office",
+    "Doctor's Office",
+    "Emergency Room",
+    "Hospital",
+    "Laboratory",
+    "Optical Shop"
+  ]
+end
   def self.find_postcode(lat = nil, long = nil)
   	postcode_json = open("http://uk-postcodes.com/latlng/{lat},{long}.json")
   	postcode_json["postcode"]
