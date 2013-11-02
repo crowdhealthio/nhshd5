@@ -14,11 +14,24 @@ class Place < ActiveRecord::Base
 
       geo = "#{venue.location.lat},#{venue.location.lng}"
 
-      location = { name: venue.name, geo: geo }
-      locations << location
+      locations << { name: venue.name, geo: geo } if valid_category?(venue.categories.first)
     end
 
     locations
   end
 
+  def self.valid_category?(category)
+    return false if category.nil?
+    @valid_categories.include?(category.name)
+  end
+
+  @valid_categories = [
+    "Medical Center",
+    "Dentist's Office",
+    "Doctor's Office",
+    "Emergency Room",
+    "Hospital",
+    "Laboratory",
+    "Optical Shop"
+  ]
 end
