@@ -12,11 +12,15 @@ function getPlaces() {
   var latitude=$("#latitude").val();
   var longitude=$("#longitude").val();
   $.getJSON("/places.json?lat="+latitude+"&long="+longitude, {data: "value"}, function(json) {
+    $("#results").empty();
     $("#results").append("<table>");
     $.each(json, function(i, item) {
       $("#results").append('<tr><td><a href="/places/'+item.id+'">' + item.name +'</a></td></tr>');
     });
     $("#results").append("</table>");
+    if (json.length == 0) {
+      $("#results").text("No results found");  
+    }
   });
 }
 
