@@ -9,7 +9,7 @@ NHS Hack Day 5 – LGBTQ Health Services
 
 ### Nicola
 
-* Transgendered, age 25
+* Transgender, age 25
 * Male to Female
 * Preoperative
 * Digital native
