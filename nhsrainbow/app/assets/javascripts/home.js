@@ -9,17 +9,17 @@ $(function() {
 });
 
 function getPlaces() {
-  var latitude=$("#latitude").innerHTML;
-  var longitude=$("#longitude").innerHTML;
+  var latitude=$("#latitude").val();
+  var longitude=$("#longitude").val();
   $.getJSON("/places.json?lat="+latitude+"&long="+longitude, {data: "value"}, function(json) {
-     alert(json);
+     alert(JSON.stringify(json));
   });
 }
 
 function storePosition(position) {
   var latitude=$("#latitude");
   var longitude=$("#longitude");
-  latitude.innerHTML = position.coords.latitude;
-  longitude.innerHTML = position.coords.longitude; 
+  latitude.val(position.coords.latitude);
+  longitude.val(position.coords.longitude); 
   getPlaces();
 }
