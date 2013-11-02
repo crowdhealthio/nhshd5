@@ -5,7 +5,6 @@ class PlacesController < ApplicationController
 
     if params[:lat] && params[:long]
       @places = Place::find_from_foursquare(params[:lat], params[:long])
-      Place::find_postcode(params[:lat], params[:long])
     else
       @places = Place.all
     end
