@@ -11,8 +11,27 @@ class Place < ActiveRecord::Base
     client.search_venues(ll: "#{lat}, #{long}")
   end
 
-  def self.find_postcode(lat=nil, long=nil)
+  def self.find_postcode(lat = nil, long = nil)
   	postcode_json = open("http://uk-postcodes.com/latlng/{lat},{long}.json")
   	postcode_json["postcode"]
+  end
+
+  def self.find_nhs_venues(postcode = nil)
+  	venues = []
+    service_types = NhsType.all
+    hydra = Typhoeus::Hydra.new
+    requests = Array.new
+    service_types.each do |service_type|
+      requests.push(Typhoeus::Request.new("http://v1.syndication.nhschoices.nhs.uk/services/types/#{service_type.uri_key}/postcode/#{postcode}.xml?apikey=NOTKAXDM&range=50"))
+    end
+    requests.map { |request| hydra.queue(request) }
+    hydra.run
+    requests.each do |request|
+       begin
+         doc = Nokogiri::XML(request.response.body)
+         venues << doc.css('s|serviceDeliverer s|name').first.text
+       rescue; end
+    end
+    venues
   end
 end
