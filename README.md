@@ -20,7 +20,7 @@ NHS Hack Day 5 – LGBTQ Health Services
 
 ### Caroline
 
-Lesbain Woman, age 35
+Lesbian Woman, age 35
 
 * In a long term relationship
 * Getting married
@@ -28,14 +28,14 @@ Lesbain Woman, age 35
 * Interested in
   * Family planning
   * Parental classes
-  * Sperm donars
+  * Sperm donors
 
 ### Sunil
 
 Bisexual Man, age 17
 
 * Not out
-* Lots of internalised homophibia from school
-* A level student at secondary school
+* Lots of internalised homophobia from school
+* A-level student at secondary school
 * Really insecure & confused
-* Wants to talk to a counellor confidentially.
+* Wants to talk to a counsellor confidentially.
