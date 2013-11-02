@@ -15,7 +15,7 @@ class Place < ActiveRecord::Base
 
       geo = "#{venue.location.lat},#{venue.location.lng}"
 
-      locations << { name: venue.name, geo: geo } if valid_category?(venue.categories.first)
+      locations << venue if valid_category?(venue.categories.first)
     end
 
     locations
