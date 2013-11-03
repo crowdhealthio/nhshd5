@@ -8,6 +8,13 @@
         <li class="list-group-item"><%= tip.tip%></li>
       <% end %>
     </ul>
+
+    <div id="tags">
+      <% @place.tags.each do |tag| %>
+        <span class="label label-warning"><%= tag.name %></span>&nbsp;
+      <% end %>
+    </div>
+
   </div>
   <div class="panel-footer">
     <p>Tag this data</p>
