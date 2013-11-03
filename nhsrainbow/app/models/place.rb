@@ -46,7 +46,7 @@ class Place < ActiveRecord::Base
         place = Place.find_or_create_by_name_and_foursquare_id(
       				:name => venue.name, 
       				:foursquare_id => venue.id)
-        place.place_type = venue.categories.first
+        place.place_type = venue.categories.first.name
         place.latitude = venue.location.lat
         place.longitude = venue.location.lng
         place.save
