@@ -68,21 +68,65 @@ class Place < ActiveRecord::Base
     service_types = NhsType.all
     hydra = Typhoeus::Hydra.new
     requests = Array.new
+    places_requests = Array.new
     service_types.each do |service_type|
-      requests.push(Typhoeus::Request.new("http://v1.syndication.nhschoices.nhs.uk/services/types/#{service_type.uri_key}/postcode/#{postcode}.xml?apikey=NOTKAXDM&range=50"))
+      requests.push(Typhoeus::Request.new("http://v1.syndication.nhschoices.nhs.uk/services/types/#{service_type.uri_key}/postcode/#{postcode}.xml?apikey=NOTKAXDM&range=1"))
     end
     requests.map { |request| hydra.queue(request) }
     hydra.run
+    hydra = Typhoeus::Hydra.new
     requests.each do |request|
-        doc = Nokogiri::XML(request.response.body)
-        doc.css('entry').each do |entry|
-          #TODO do something better here if they are both in foursquare and NHS !
-          place = Place.find_or_create_by_name_and_nhs_id(
-             :name => entry.css('s|serviceDeliverer s|name').text,
+      doc = Nokogiri::XML(request.response.body)
+      doc.css('entry').each do |entry|
+        places_requests.push(Typhoeus::Request.new("#{entry.css('id').text}.xml?apikey=NOTKAXDM"))
+      end
+    end
+    places_requests.map { |request| hydra.queue(request) }
+    hydra.run
+    places_requests.each do |request|
+        doc = Nokogiri::XML(request.response.body).remove_namespaces!
+        doc.css('feed').each do |entry|
+          place_lat = entry.css('latitude').text.to_f
+          place_lng = entry.css('longitude').text.to_f
+          already_exists = Place.place_with_name_within_radius(entry.css('title').text, 1000, place_lat, place_lng)
+          if !already_exists
+            place = Place.find_or_create_by_name_and_nhs_id(
+             :name => entry.css('title').text,
              :nhs_id => URI.parse(entry.css('id').text).path.split("/").last)
-          venues << place
-         end
+            place.latitude = place_lat
+            place.longitude = place_lng
+            place.save
+            venues << place
+          end
+        end
     end
     venues
+  end
+
+  def self.distance place1, latitude, longitude
+  a = [place1.latitude, place1.longitude]
+  b = [latitude, longitude]
+  rad_per_deg = Math::PI/180  # PI / 180
+  rkm = 6371                  # Earth radius in kilometers
+  rm = rkm * 1000             # Radius in meters
+
+  dlon_rad = (b[1]-a[1]) * rad_per_deg  # Delta, converted to rad
+  dlat_rad = (b[0]-a[0]) * rad_per_deg
+
+  lat1_rad, lon1_rad = a.map! {|i| i * rad_per_deg }
+  lat2_rad, lon2_rad = b.map! {|i| i * rad_per_deg }
+
+  a = Math.sin(dlat_rad/2)**2 + Math.cos(lat1_rad) * Math.cos(lat2_rad) * Math.sin(dlon_rad/2)**2
+  c = 2 * Math.asin(Math.sqrt(a))
+
+  rm * c # Delta in meters
+  end
+
+  def self.place_with_name_within_radius(name, radius, latitude, longitude)
+    places = Place.where(name: name)
+    places.each do |place|
+      return true if Place.distance(place, latitude, longitude) < radius 
+    end
+    false
   end
 end
