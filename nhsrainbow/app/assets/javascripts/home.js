@@ -15,7 +15,7 @@ function getPlaces() {
     $("#results").empty();
     $("#results").append("<table>");
     $.each(json, function(i, item) {
-      $("#results").append('<tr><td><a href="/places/'+item.id+'">' + item.name +'</a></td></tr>');
+      $("#results").append('<tr><td><a href="/places/'+item.foursquare_id+'">' + item.name +'</a></td></tr>');
     });
     $("#results").append("</table>");
     if (json.length == 0) {

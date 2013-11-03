@@ -4,7 +4,7 @@ class PlacesController < ApplicationController
   def index
 
     if params[:lat] && params[:long]
-      @places = Place::find_from_foursquare(params[:lat], params[:long])
+      @places = Place::find_from_coordinates(params[:lat], params[:long])
     else
       @places = Place.all
     end
@@ -18,7 +18,7 @@ class PlacesController < ApplicationController
   # GET /places/1
   # GET /places/1.json
   def show
-    @place = Place::find_by_foursquare_id(params[:id])
+    @place = Place::get_from_foursquare_id(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
