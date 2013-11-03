@@ -1,4 +1,7 @@
 Nhsrainbow::Application.routes.draw do
+  resources :tags
+
+
   resources :tips
 
 
