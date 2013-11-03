@@ -50,3 +50,4 @@ gem 'bootstrap-sass', '~> 3.0.1.0.rc'
 gem 'nokogiri'
 gem 'typhoeus', '0.4.2'
 gem 'rails3-jquery-autocomplete'
+gem 'rails_12factor', group: :production
