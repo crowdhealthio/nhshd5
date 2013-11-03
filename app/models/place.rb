@@ -69,18 +69,32 @@ class Place < ActiveRecord::Base
   	venues = []
     service_types = NhsType.all
     hydra = Typhoeus::Hydra.new
+    hydra.cache_getter do |request|
+      Rails.cache.read(request.cache_key) rescue nil
+    end
+    #Set behavior of Hydra Cache Setter
+    hydra.cache_setter do |request|
+      Rails.cache.write(request.cache_key,request.response,expires_in: request.cache_timeout)
+    end
     requests = Array.new
     places_requests = Array.new
     service_types.each do |service_type|
-      requests.push(Typhoeus::Request.new("http://v1.syndication.nhschoices.nhs.uk/services/types/#{service_type.uri_key}/postcode/#{postcode}.xml?apikey=NOTKAXDM&range=1"))
+      requests.push(Typhoeus::Request.new("http://v1.syndication.nhschoices.nhs.uk/services/types/#{service_type.uri_key}/postcode/#{postcode}.xml?apikey=NOTKAXDM&range=1", cache_timeout: 1.day))
     end
     requests.map { |request| hydra.queue(request) }
     hydra.run
     hydra2 = Typhoeus::Hydra.new
+    hydra2.cache_getter do |request|
+      Rails.cache.read(request.cache_key) rescue nil
+    end
+    #Set behavior of Hydra Cache Setter
+    hydra2.cache_setter do |request|
+      Rails.cache.write(request.cache_key,request.response,expires_in: request.cache_timeout)
+    end
     requests.each do |request|
       doc = Nokogiri::XML(request.response.body)
       doc.css('entry').each do |entry|
-        places_requests.push(Typhoeus::Request.new("#{entry.css('id').text}.xml?apikey=NOTKAXDM"))
+        places_requests.push(Typhoeus::Request.new("#{entry.css('id').text}.xml?apikey=NOTKAXDM", cache_timeout: 1.day))
       end
     end
     places_requests.map { |request| hydra2.queue(request) }
