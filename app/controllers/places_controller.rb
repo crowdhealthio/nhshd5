@@ -18,7 +18,8 @@ class PlacesController < ApplicationController
   # GET /places/1
   # GET /places/1.json
   def show
-    @place = Place::get_from_foursquare_id(params[:id])
+    @place = Place::find_by_id(params[:id])
+    @tip = Tip.new(place_id: @place.id)
 
     respond_to do |format|
       format.html # show.html.erb

@@ -33,7 +33,7 @@ class Place < ActiveRecord::Base
   ]
 
   def self.find_foursquare_places(lat = nil, long = nil)
-  	
+
     client = Foursquare2::Client.new(:client_id => @client_id, :client_secret => @client_secret)
 
     locations = []
@@ -44,7 +44,7 @@ class Place < ActiveRecord::Base
       geo = "#{venue.location.lat},#{venue.location.lng}"
       if valid_category?(venue.categories.first)
         place = Place.find_or_create_by_name_and_foursquare_id(
-      				:name => venue.name, 
+      				:name => venue.name,
       				:foursquare_id => venue.id)
         place.place_type = venue.categories.first.name
         place.latitude = venue.location.lat

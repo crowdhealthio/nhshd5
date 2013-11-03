@@ -44,7 +44,8 @@ class TipsController < ApplicationController
 
     respond_to do |format|
       if @tip.save
-        format.html { redirect_to @tip, notice: 'Tip was successfully created.' }
+        @place = Place.find(id: @tip.place_id)
+        format.html { redirect_to @place, notice: 'Tip was successfully created.' }
         format.json { render json: @tip, status: :created, location: @tip }
       else
         format.html { render action: "new" }

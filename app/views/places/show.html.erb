@@ -12,23 +12,6 @@
   </div>
 </div>
 
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">Ratings</h3>
-  </div>
-  <div class="panel-body">
-    Panel content
-  </div>
-</div>
-
-<p>
-  <b>Description:</b>
-  <%= @place.description %>
-</p>
-
-<p>
-  <b>Place type:</b>
-  <%= @place.place_type %>
-</p>
+<%= render 'tip' %>
 
 <%= link_to 'Back', root_path, { class: 'btn btn-danger' } %>

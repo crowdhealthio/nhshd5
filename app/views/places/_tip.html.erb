@@ -1,22 +1,32 @@
-<%= form_for(@tip) do |f| %>
-  <% if @tip.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@tip.errors.count, "error") %> prohibited this place from being saved:</h2>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Add information about this practice</h3>
+  </div>
+  <div class="panel-body">
 
-      <ul>
-      <% @tip.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
+    <%= form_for(@tip) do |f| %>
+      <% if @tip.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(@tip.errors.count, "error") %> prohibited this tip from being saved:</h2>
+
+          <ul>
+          <% @tip.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+          </ul>
+        </div>
       <% end %>
-      </ul>
-    </div>
-  <% end %>
 
-  <div class="field">
-    <%= f.label :tip %><br />
-    <%= f.text_area :tip %>
-  </div>
+      <div class="field">
+        <%= f.label :tip %><br />
+        <%= f.text_area :tip %>
+      </div>
 
-  <div class="actions">
-    <%= f.submit %>
+      <%= f.hidden_field :place_id %>
+
+      <div class="actions">
+        <%= f.submit(class: 'btn btn-success') %>
+      </div>
+    <% end %>
   </div>
-<% end %>
+</div>
