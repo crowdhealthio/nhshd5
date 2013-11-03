@@ -63,7 +63,7 @@ class Place < ActiveRecord::Base
   end
 
   def self.find_nhs_venues(lat = nil, long = nil)
-  	postcode = Place::find_postcode(lat, long).
+  	postcode = Place::find_postcode(lat, long).squish
   	venues = []
     service_types = NhsType.all
     hydra = Typhoeus::Hydra.new
