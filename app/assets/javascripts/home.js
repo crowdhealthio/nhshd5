@@ -13,13 +13,17 @@ function getPlaces() {
   var longitude=$("#longitude").val();
   $.getJSON("/places.json?lat="+latitude+"&long="+longitude, {data: "value"}, function(json) {
     $("#results").empty();
-    $("#results").append("<table>");
+    $("#results").append('<div class="list-group">');
     $.each(json, function(i, item) {
-      $("#results").append('<tr><td><a href="/places/'+item.id+'">' + item.name +'</a></td></tr>');
+      console.log(item)
+      if(item.category) {
+        console.log(item)
+      }
+      $("#results").append('<a class="list-group-item" href="/places/'+item.id+'">' + item.name +'</a>');
     });
-    $("#results").append("</table>");
+    $("#results").append("</div>");
     if (json.length == 0) {
-      $("#results").text("No results found");  
+      $("#results").text("No results found");
     }
   });
 }
@@ -28,6 +32,6 @@ function storePosition(position) {
   var latitude=$("#latitude");
   var longitude=$("#longitude");
   latitude.val(position.coords.latitude);
-  longitude.val(position.coords.longitude); 
+  longitude.val(position.coords.longitude);
   getPlaces();
 }
