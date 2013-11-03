@@ -1,1 +1,0 @@
-Nhsrainbow::Application.config.secret_token = 'HJGHJGKHJG43343kJGKgegjg3jrg4hjgrjh4grhjg'
