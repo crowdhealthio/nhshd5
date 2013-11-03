@@ -149,3 +149,4 @@ DEPENDENCIES
   sass-rails (~> 3.2.3)
   sqlite3
   typhoeus (= 0.4.2)
+  uglifier (>= 1.0.3)
