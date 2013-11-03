@@ -5,8 +5,9 @@ Nhsrainbow::Application.routes.draw do
   get 'home/index'
   get 'home/autocomplete_tag_name'
 
-  resources :places
-
+  resources :places do
+    get 'search'
+  end
 
   resources :tags do
     get :autocomplete_tag_name, :on => :collection

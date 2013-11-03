@@ -89,4 +89,14 @@ class PlacesController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  #GET /places/search?terms=taggy,taggy2
+  def search
+     terms_array = params[:terms].split(",")
+     tags = []
+     terms_array.each do |term|
+       tags << term.
+     end
+     @places = Place.all
+  end
 end
