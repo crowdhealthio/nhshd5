@@ -22,6 +22,7 @@ class PlacesController < ApplicationController
   def show
     @place = Place::find_by_id(params[:id])
     @tip = Tip.new(place_id: @place.id)
+    @tag = Tag.new(place_id: @place.id)
 
     respond_to do |format|
       format.html # show.html.erb
