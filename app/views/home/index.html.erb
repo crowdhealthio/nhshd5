@@ -3,8 +3,13 @@
   <%= javascript_include_tag 'jquery-ui-1.10.3.custom.min.js', 'autocomplete-rails.js' %>
   <%= stylesheet_link_tag 'jquery-ui-1.10.3.custom.css' %>
 
-<input type="hidden" id="latitude"></p>
-<input type="hidden" id="longitude"></p>
+<input type="hidden" id="latitude">
+<input type="hidden" id="longitude">
+
+<div id="search">
+  <%= render 'search' %>
+</div>
+
 <div id="results">
 
 <div class="well">
@@ -19,3 +24,5 @@
 </div>
 
 </div>
+
+/places/search?terms=dddd,dddd,fff
