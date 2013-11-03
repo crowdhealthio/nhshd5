@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
-  autocomplete :tags, :name, :full => true
   def index
+    @place = Place.new
   end
 end
