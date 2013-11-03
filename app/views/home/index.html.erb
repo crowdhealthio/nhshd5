@@ -1,5 +1,8 @@
 <%= javascript_include_tag "home" %>
 
+  <%= javascript_include_tag 'jquery-ui-1.10.3.custom.min.js', 'autocomplete-rails.js' %>
+  <%= stylesheet_link_tag 'jquery-ui-1.10.3.custom.css' %>
+
 <input type="hidden" id="latitude"></p>
 <input type="hidden" id="longitude"></p>
 <div id="results">
@@ -16,3 +19,7 @@
 </div>
 
 </div>
+
+<%= form_tag do %>
+  <%=text_field_tag 'name', '', :autocomplete => home_autocomplete_tag_name_path %>
+<% end %>

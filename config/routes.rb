@@ -1,15 +1,16 @@
 Nhsrainbow::Application.routes.draw do
-  resources :tags
-
-
   resources :tips
 
-
   root :to => "home#index"
-  get "home/index"
+  get 'home/index'
+  get 'home/autocomplete_tag_name'
 
   resources :places
 
+
+  resources :tags do
+    get :autocomplete_tag_name, :on => :collection
+  end
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

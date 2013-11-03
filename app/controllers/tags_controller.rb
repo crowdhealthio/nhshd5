@@ -1,4 +1,5 @@
 class TagsController < ApplicationController
+  autocomplete :tag, :name
   # GET /tags
   # GET /tags.json
   def index
