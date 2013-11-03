@@ -2,6 +2,7 @@ require 'open-uri'
 
 class Place < ActiveRecord::Base
   attr_accessible :description, :latitude, :longitude, :name, :place_type, :foursquare_id, :nhs_id
+  has_many :tips
 
   @client_id     = 'MIWYYAX3URRPFV3OJTT041F5QIIE1E5GRDNAQ0CLFACR5GHS'
   @client_secret = 'SPQB2PD13XMQVTWT0KFJGORE2OBBOARCCPR5RI0DT0JTSVBI'

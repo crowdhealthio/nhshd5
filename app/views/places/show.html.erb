@@ -4,11 +4,9 @@
   <div class="panel-body">
     <em>Information about this place</em>
     <ul class="list-group">
-      <li class="list-group-item">Provides LGBTQ sexual health screenings every Wednesday</li>
-      <li class="list-group-item">Provides LGBTQ sexual health screenings every Wednesday</li>
-      <li class="list-group-item">Provides LGBTQ sexual health screenings every Wednesday</li>
-      <li class="list-group-item">Provides LGBTQ sexual health screenings every Wednesday</li>
-      <li class="list-group-item">Provides LGBTQ sexual health screenings every Wednesday</li>
+      <% @place.tips.each do |tip| %>
+        <li class="list-group-item"><%= tip.tip%></li>
+      <% end %>
     </ul>
   </div>
   <div class="panel-footer">
