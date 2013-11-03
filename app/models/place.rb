@@ -1,4 +1,5 @@
 require 'open-uri'
+
 class Place < ActiveRecord::Base
   attr_accessible :description, :latitude, :longitude, :name, :place_type, :foursquare_id, :nhs_id
 
@@ -74,30 +75,35 @@ class Place < ActiveRecord::Base
     end
     requests.map { |request| hydra.queue(request) }
     hydra.run
-    hydra = Typhoeus::Hydra.new
+    hydra2 = Typhoeus::Hydra.new
     requests.each do |request|
       doc = Nokogiri::XML(request.response.body)
       doc.css('entry').each do |entry|
         places_requests.push(Typhoeus::Request.new("#{entry.css('id').text}.xml?apikey=NOTKAXDM"))
       end
     end
-    places_requests.map { |request| hydra.queue(request) }
-    hydra.run
+    places_requests.map { |request| hydra2.queue(request) }
+    hydra2.run
     places_requests.each do |request|
         doc = Nokogiri::XML(request.response.body).remove_namespaces!
         doc.css('feed').each do |entry|
           place_lat = entry.css('latitude').text.to_f
           place_lng = entry.css('longitude').text.to_f
-          already_exists = Place.place_with_name_within_radius(entry.css('title').text, 1000, place_lat, place_lng)
-          if !already_exists
+          name = entry.css('deliverer').text
+          if name.empty?
+            remove_intro = entry.css('title').text[14..-1]
+            name = remove_intro[0..remove_intro.size/2-1]
+          end
+          place = Place.place_with_name_within_radius(name, 1000, place_lat, place_lng)
+          if !place
             place = Place.find_or_create_by_name_and_nhs_id(
-             :name => entry.css('title').text,
+             :name => name,
              :nhs_id => URI.parse(entry.css('id').text).path.split("/").last)
             place.latitude = place_lat
             place.longitude = place_lng
             place.save
-            venues << place
           end
+          venues << place
         end
     end
     venues
@@ -125,8 +131,8 @@ class Place < ActiveRecord::Base
   def self.place_with_name_within_radius(name, radius, latitude, longitude)
     places = Place.where(name: name)
     places.each do |place|
-      return true if Place.distance(place, latitude, longitude) < radius 
+      return place if Place.distance(place, latitude, longitude) < radius 
     end
-    false
+    nil
   end
 end

@@ -5,10 +5,12 @@ class PlacesController < ApplicationController
 
     if params[:lat] && params[:long]
       @places = Place::find_from_coordinates(params[:lat], params[:long])
+      #TODO sort by distance to here
     else
       @places = Place.all
     end
-
+    @places.uniq!
+    @places = @places.sort_by { |p| Place.distance(p, params[:lat].to_f, params[:long].to_f) }
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @places }
