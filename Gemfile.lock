@@ -72,6 +72,7 @@ GEM
     multipart-post (1.2.0)
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
+    pg (0.17.0)
     polyglot (0.3.3)
     pry (0.9.12.2)
       coderay (~> 1.0.5)
@@ -135,6 +136,7 @@ DEPENDENCIES
   foursquare2
   jquery-rails
   nokogiri
+  pg
   pry
   rails (= 3.2.13)
   sass-rails (~> 3.2.3)
