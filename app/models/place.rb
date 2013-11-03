@@ -1,6 +1,6 @@
 require 'open-uri'
 class Place < ActiveRecord::Base
-  attr_accessible :description, :latitude, :longitude, :name, :place_type, :foursquare_id
+  attr_accessible :description, :latitude, :longitude, :name, :place_type, :foursquare_id, :nhs_id
 
   @client_id     = 'MIWYYAX3URRPFV3OJTT041F5QIIE1E5GRDNAQ0CLFACR5GHS'
   @client_secret = 'SPQB2PD13XMQVTWT0KFJGORE2OBBOARCCPR5RI0DT0JTSVBI'
@@ -63,7 +63,7 @@ class Place < ActiveRecord::Base
   end
 
   def self.find_nhs_venues(lat = nil, long = nil)
-  	postcode = Place::find_postcode(lat, long).squish
+  	postcode = Place::find_postcode(lat, long).gsub!(/\s+/, "")
   	venues = []
     service_types = NhsType.all
     hydra = Typhoeus::Hydra.new
@@ -74,13 +74,14 @@ class Place < ActiveRecord::Base
     requests.map { |request| hydra.queue(request) }
     hydra.run
     requests.each do |request|
-       begin
-         doc = Nokogiri::XML(request.response.body)
-         #TODO do something better here if they are both in foursquare and NHS !
-         venues << Place.find_or_create_by_name_and_nhs_id(
-         	:name => doc.css('s|serviceDeliverer s|name').first.text,
-         	:nhs_id => URI.parse(doc.css('entry id')).path.split("/").last)
-       rescue; end
+        doc = Nokogiri::XML(request.response.body)
+        doc.css('entry').each do |entry|
+          #TODO do something better here if they are both in foursquare and NHS !
+          place = Place.find_or_create_by_name_and_nhs_id(
+             :name => entry.css('s|serviceDeliverer s|name').text,
+             :nhs_id => URI.parse(entry.css('id').text).path.split("/").last)
+          venues << place
+         end
     end
     venues
   end
