@@ -1,4 +1,7 @@
 Nhsrainbow::Application.routes.draw do
+  resources :tips
+
+
   root :to => "home#index"
   get "home/index"
 
